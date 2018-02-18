@@ -3,17 +3,19 @@ BTS7960 Motor Driver with Joystick
 Written By : Steve David
 */
 
-// Left motor control pins
-int leftRPWM=5;
-int leftLPWM=6;
-int leftL_EN=7;
-int leftR_EN=8;
+// motor control pins
 
-// right motor control pins
-int rightRPWM=1;
-int rightLPWM=2;
-int rightL_EN=3;
-int rightR_EN=4;
+// PWM pins control speed and direction.
+int leftRPWM=9;   //  positive value on RPWM pin (and 0 on LPWM pin) means backward, 1=slowest, 255=fastest
+int leftLPWM=10;  //  positive value on LPWM pin (and 0 on RPWM pin) means forward, 1=slowest 255=fastest
+int rightRPWM=5;  // same as above, but right motor
+int rightLPWM=6;  
+
+//int leftL_EN=7;  no need to enable EN pins - we'll just connect R and L EN pins to breadboard 5v to enable, to conserve PWM pins on-board to allow room for multiple controllers.
+//int leftR_EN=8;
+//int rightL_EN=3;
+//int rightR_EN=4;
+
 
 int sensorPinX = A3; // Input pin for joystick, x value
 int sensorPinY = A4; // Input pin for joystick, y value
@@ -21,10 +23,10 @@ int sensorPinY = A4; // Input pin for joystick, y value
 void setup() {
   
   // output pins
-  for(int i=5;i<9;i++){
+  for(int i=1;i<10;i++){
    pinMode(i,OUTPUT);
   }
-   for(int i=5;i<9;i++){
+   for(int i=1;i<10;i++){
    digitalWrite(i,LOW);
   }
 
@@ -44,14 +46,6 @@ void loop() {
   int rightMotorPower; // same, but right motor
   int maxPower=255;
 
-  // Turn on motor control.
-  // Left
-  digitalWrite(leftR_EN,HIGH);
-  digitalWrite(leftL_EN,HIGH);
-
-  // Right
-  digitalWrite(rightR_EN,HIGH);
-  digitalWrite(rightL_EN,HIGH);
 
   delay(50);
 
@@ -77,14 +71,6 @@ if (abs(xValue)<5 && abs(yValue)<5) {
       if (angle>45) {
         rightMotorPower*=-1;
       }
-
-      // FIXME now, write correct values to motor pins.  LPWM and RPWM depend on positive/negative direction.  Subroutine?
-      analogWrite(leftLPWM, leftMotorPower); // left motor
-      analogWrite(leftRPWM, 0);
-
-      analogWrite(rightLPWM, rightMotorPower); // right motor
-      analogWrite(rightRPWM, 0);
-
       
     } else {
       // backward right.
@@ -120,6 +106,32 @@ if (abs(xValue)<5 && abs(yValue)<5) {
   }
 
 }
+
+
+  // now, write correct values to motor PWM pins.  
+  // right motor
+  if (rightMotorPower==0) {
+    analogWrite(rightLPWM, 0); 
+    analogWrite(rightRPWM, 0); 
+  } else if (rightMotorPower>0) {
+    analogWrite(rightLPWM, rightMotorPower); 
+    analogWrite(rightRPWM, 0); 
+  } else {
+    analogWrite(rightLPWM, 0); 
+    analogWrite(rightRPWM, -rightMotorPower); 
+  }
+  
+  // left motor
+  if (leftMotorPower==0) {
+    analogWrite(leftLPWM, 0); 
+    analogWrite(leftRPWM, 0); 
+  } else if (leftMotorPower>0) {
+    analogWrite(leftLPWM, leftMotorPower); 
+    analogWrite(leftRPWM, 0); 
+  } else {
+    analogWrite(leftLPWM, 0); 
+    analogWrite(leftRPWM, -leftMotorPower); 
+  }
 
   // Write out to console.  Useful for debugging.
   Serial.print("X:");

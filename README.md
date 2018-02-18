@@ -1,1 +1,1 @@
-# motor_with_joystick
+Controls two 3a motors in tandem with selected position of joystick
