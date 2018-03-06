@@ -5,11 +5,11 @@ Written By : Steve David
 
 // motor control pins
 
-// PWM pins control speed and direction.
-int leftRPWM=9;   //  positive value on RPWM pin (and 0 on LPWM pin) means backward, 1=slowest, 255=fastest
-int leftLPWM=10;  //  positive value on LPWM pin (and 0 on RPWM pin) means forward, 1=slowest 255=fastest
-int rightRPWM=5;  // same as above, but right motor
-int rightLPWM=6;  
+// PWM pins control speed and direction.  On nano, 3,5,6,9,10,11 are PWM-enabled.
+int leftRPWM=3;   //  positive value on RPWM pin (and 0 on LPWM pin) means backward, 1=slowest, 255=fastest
+int leftLPWM=5;  //  positive value on LPWM pin (and 0 on RPWM pin) means forward, 1=slowest 255=fastest
+int rightRPWM=6;  // same as above, but right motor
+int rightLPWM=9;  
 
 //int leftL_EN=7;  no need to enable EN pins - we'll just connect R and L EN pins to breadboard 5v to enable, to conserve PWM pins on-board to allow room for multiple controllers.
 //int leftR_EN=8;
@@ -49,7 +49,7 @@ void loop() {
 
   delay(50);
 
-if (abs(xValue)<5 && abs(yValue)<5) {
+if (abs(xValue)<50 && abs(yValue)<50) {
   Serial.print("STOPPED.  ");
 } else {
   Serial.print("MOVING.   ");
