@@ -17,8 +17,8 @@ int rightLPWM=9;
 //int rightR_EN=4;
 
 
-int sensorPinX = A3; // Input pin for joystick, x value
-int sensorPinY = A4; // Input pin for joystick, y value
+int sensorPinX = A4; // Input pin for joystick, x value
+int sensorPinY = A3; // Input pin for joystick, y value
 
 void setup() {
   
@@ -134,7 +134,11 @@ if (abs(xValue)<50 && abs(yValue)<50) {
   }
 
   // Write out to console.  Useful for debugging.
-  Serial.print("X:");
+  Serial.print("sensorX:");
+  Serial.print(sensorValueX);
+  Serial.print(",sensorY:");
+  Serial.print(sensorValueY);
+  Serial.print(",X:");
   Serial.print(xValue);
   Serial.print(",Y:");
   Serial.print(yValue);
